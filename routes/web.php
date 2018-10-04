@@ -11,6 +11,4 @@
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('{hash}', 'API\V1\ShortUrlController@redirect');
