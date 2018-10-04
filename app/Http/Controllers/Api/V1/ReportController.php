@@ -22,7 +22,7 @@ class ReportController extends Controller
 
     }
 
-    public function report($id, $group)
+    public function report($id, $group, Request $request)
     {
         $formatArr = [
             'days' => 'Y-m-d',
@@ -30,10 +30,15 @@ class ReportController extends Controller
             'min' => 'Y-m-d H:i',
         ];
 
+        $fromDate = $request->get('from_date', '0000-00-00');
+        $toDate = $request->get('toDate', '9999-00-00');
+
         $shortUrl = ShortUrl::where('id', $id)->auth()->firstOrFail();
         $referers = $shortUrl
             ->referers()
-            ->selectRaw('created_at')
+            ->whereDate('created_at', '>=', $fromDate)
+            ->whereDate('created_at', '<=', $toDate)
+            ->select('created_at')
             ->get();
 
         $groupArr = [];
